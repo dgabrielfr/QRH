@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="generator" content="pandoc">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+  <meta name="author" content="Damien GABRIEL">
+  <title>QRH : Base de données</title>
+  <style type="text/css">code{white-space: pre;}</style>
+  <style type="text/css">
+div.sourceCode { overflow-x: auto; }
+table.sourceCode, tr.sourceCode, td.lineNumbers, td.sourceCode {
+  margin: 0; padding: 0; vertical-align: baseline; border: none; }
+table.sourceCode { width: 100%; line-height: 100%; }
+td.lineNumbers { text-align: right; padding-right: 4px; padding-left: 4px; color: #aaaaaa; border-right: 1px solid #aaaaaa; }
+td.sourceCode { padding-left: 5px; }
+code > span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code > span.dt { color: #902000; } /* DataType */
+code > span.dv { color: #40a070; } /* DecVal */
+code > span.bn { color: #40a070; } /* BaseN */
+code > span.fl { color: #40a070; } /* Float */
+code > span.ch { color: #4070a0; } /* Char */
+code > span.st { color: #4070a0; } /* String */
+code > span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code > span.ot { color: #007020; } /* Other */
+code > span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code > span.fu { color: #06287e; } /* Function */
+code > span.er { color: #ff0000; font-weight: bold; } /* Error */
+code > span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+code > span.cn { color: #880000; } /* Constant */
+code > span.sc { color: #4070a0; } /* SpecialChar */
+code > span.vs { color: #4070a0; } /* VerbatimString */
+code > span.ss { color: #bb6688; } /* SpecialString */
+code > span.im { } /* Import */
+code > span.va { color: #19177c; } /* Variable */
+code > span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code > span.op { color: #666666; } /* Operator */
+code > span.bu { } /* BuiltIn */
+code > span.ex { } /* Extension */
+code > span.pp { color: #bc7a00; } /* Preprocessor */
+code > span.at { color: #7d9029; } /* Attribute */
+code > span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code > span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code > span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+  </style>
+  <link rel="stylesheet" href="fichiers/css/github-pandoc.css">
+  <!--[if lt IE 9]>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv-printshiv.min.js"></script>
+  <![endif]-->
+</head>
+<body>
+<header>
+<h1 class="title">QRH : Base de données</h1>
+<h2 class="author">Damien GABRIEL</h2>
+<h3 class="date">Version : 1 | Juillet 2016</h3>
+</header>
+<nav id="TOC">
+<ul>
+<li><a href="#installation-de-postgresql-postgis">Installation de PostgreSQL / PostGIS</a><ul>
+<li><a href="#linux-manjaro">Linux (Manjaro)</a><ul>
+<li><a href="#initialisation-du-cluster">Initialisation du Cluster</a></li>
+<li><a href="#démarrage-et-arrêt-de-postgresql">Démarrage et arrêt de PostgreSQL</a></li>
+</ul></li>
+<li><a href="#ajout-des-utilisateurs">Ajout des utilisateurs</a><ul>
+<li><a href="#création-dune-base-de-donnée">Création d’une base de donnée</a></li>
+</ul></li>
+</ul></li>
+<li><a href="#utilisation-de-postgresql-et-postgis">Utilisation de PostgreSQL et PostGIS</a><ul>
+<li><a href="#création-du-base-de-données-spatiale">Création du base de données spatiale</a></li>
+<li><a href="#insertion-de-données">Insertion de données</a></li>
+<li><a href="#calcul-de-navigation">Calcul de navigation</a></li>
+<li><a href="#requête-spatiales">Requête spatiales</a><ul>
+<li><a href="#affichage-des-coordonnées-sous-forme-de-texte">Affichage des coordonnées sous forme de texte</a></li>
+<li><a href="#trouver-les-points-les-plus-proches-dun-point-dintérêt">Trouver les points les plus proches d’un point d’intérêt</a></li>
+</ul></li>
+</ul></li>
+</ul>
+</nav>
+<p><a href="http://github.com/syl20bnr/spacemacs"><img src="https://cdn.rawgit.com/syl20bnr/spacemacs/442d025779da2f62fc86c2082703697714db6514/assets/spacemacs-badge.svg" alt="Built with Spacemacs" /></a></p>
+<hr />
+<h1 id="installation-de-postgresql-postgis">Installation de PostgreSQL / PostGIS</h1>
+<h2 id="linux-manjaro">Linux (Manjaro)</h2>
+<p>Pour installer PostgreSQL et PostGIS sur Manjaro, il faut installer :</p>
+<div class="sourceCode" include="./fichiers/bash/postgresql_install.txt"><pre class="sourceCode bash"><code class="sourceCode bash"><span class="kw">postgresql</span>
+<span class="kw">postgresql-docs</span>
+<span class="kw">postgis</span></code></pre></div>
+<p>On peut aussi installer les paquets suivants pour améliorer le travail avec les bases de données :</p>
+<div class="sourceCode" include="./fichiers/bash/postgresql_install_opt.txt"><pre class="sourceCode bash"><code class="sourceCode bash"><span class="kw">pgadmin3</span>
+<span class="kw">umbrello</span>
+<span class="kw">libpqxx</span>
+<span class="kw">psqlodbc</span>
+<span class="kw">python-psycopg2</span>
+<span class="kw">lua-sql-posqtgres</span>
+<span class="kw">php-pgsql</span>
+<span class="kw">haskell-postgresql-libpq</span>
+<span class="kw">haskell-postgresql-binary</span></code></pre></div>
+<h3 id="initialisation-du-cluster">Initialisation du Cluster</h3>
+<div class="sourceCode"><pre class="sourceCode bash"><code class="sourceCode bash"><span class="kw">sudo</span> -i -u postgres
+<span class="kw">initdb</span> --local <span class="ot">$LANG</span> -E UTF8 -D <span class="st">&#39;/var/lib/postgres/data&#39;</span></code></pre></div>
+<h3 id="démarrage-et-arrêt-de-postgresql">Démarrage et arrêt de PostgreSQL</h3>
+<div class="sourceCode"><pre class="sourceCode bash"><code class="sourceCode bash"><span class="kw">systemctl</span> start postgresql
+<span class="kw">systemctl</span> stop postgresql</code></pre></div>
+<p>Pour que PostgreSQL soit actif à tous les redemarrages on peut aussi utiliser :</p>
+<div class="sourceCode"><pre class="sourceCode bash"><code class="sourceCode bash"><span class="kw">systemctl</span> enable postgresql</code></pre></div>
+<h2 id="ajout-des-utilisateurs">Ajout des utilisateurs</h2>
+<p>Par défaut, l’installation de PostgreSQL n’a que l’utilisateur <em>postgres</em>. C’est le seul utilisateur qui peut se connecter a <em>psql</em>.</p>
+<p>La première étape pour véritablement utiliser PostgreSQL est donc de créer de nouveau utilisateur.</p>
+<p>Ici on va créer un utilisateur <em>lambda</em> autorisé à créer des bases.</p>
+<p>On commence par se connecter à psql :<a href="#fn1" class="footnoteRef" id="fnref1"><sup>1</sup></a></p>
+<div class="sourceCode"><pre class="sourceCode bash"><code class="sourceCode bash"><span class="kw">su</span> - postgres
+<span class="kw">psql</span></code></pre></div>
+<p>Une fois dans le shell de psql :</p>
+<pre class="shell"><code>CREATE USER lambda;
+ALTER ROLE lambda WITH CREATEDB;
+ALTER ROLE lambda WITH ENCRYPTED PASSWORD &#39;omega&#39;;</code></pre>
+<h3 id="création-dune-base-de-donnée">Création d’une base de donnée</h3>
+<p>Pour créer une base de donnée on utilise :</p>
+<div class="sourceCode"><pre class="sourceCode bash"><code class="sourceCode bash"><span class="kw">created</span> *nom_de_la_base*</code></pre></div>
+<p>On peut alors ce connecter avec l’utilisateur <em>lambda</em> à la base <em>db</em> en utilisant :</p>
+<div class="sourceCode"><pre class="sourceCode bash"><code class="sourceCode bash"><span class="kw">psql</span> -U lambda -d bd</code></pre></div>
+<p>Le shell de PostgreSQL doit affcher sur la première ligne le nom de la base, donc ici <em>db</em>.</p>
+<h1 id="utilisation-de-postgresql-et-postgis">Utilisation de PostgreSQL et PostGIS</h1>
+<h2 id="création-du-base-de-données-spatiale">Création du base de données spatiale</h2>
+<p>Pour créer une base de données spatiale avec PostGIS il faut utiliser les types <em>geography</em> si on veut faire des calculs précis (ie sur le geoïde en WGS84).</p>
+<p><strong>Pour utiliser PostGIS il faut créer l’extension <em>postgis</em> dans la base de données</strong></p>
+<div class="sourceCode" include="./fichiers/SQL/create_spatial_db.sql"><pre class="sourceCode sql"><code class="sourceCode sql"><span class="kw">CREATE</span> <span class="kw">TABLE</span> demoPoint(
+	ptID serial <span class="kw">primary</span> <span class="kw">key</span>,
+	nom <span class="dt">character</span> <span class="dt">varying</span>(<span class="dv">80</span>),
+	coordo geography
+); </code></pre></div>
+<h2 id="insertion-de-données">Insertion de données</h2>
+<div class="sourceCode" include="./fichiers/SQL/insert_spatial_db.sql"><pre class="sourceCode sql"><code class="sourceCode sql"><span class="kw">INSERT</span> <span class="kw">INTO</span> demoPoint(nom, coordo)
+<span class="kw">VALUES</span> (<span class="st">&#39;LFPO&#39;</span>, ST_MAKEPOINT(<span class="fl">2.37958</span>, <span class="fl">48.72328</span>));
+
+<span class="kw">INSERT</span> <span class="kw">INTO</span> demoPoint(nom, coordo)
+<span class="kw">VALUES</span> (<span class="st">&#39;LFML&#39;</span>, ST_MAKEPOINT(<span class="fl">5.21500</span>, <span class="fl">43.43667</span>));
+
+<span class="kw">INSERT</span> <span class="kw">INTO</span> demoPoint(nom, coordo)
+<span class="kw">VALUES</span> (<span class="st">&#39;LFOR&#39;</span>, ST_MAKEPOINT(<span class="fl">1.52389</span>, <span class="fl">48.45889</span>)); </code></pre></div>
+<p><strong>ATTENTION</strong> Comme le montre les commandes au-dessus, l’ordre des coordonnées doit d’abord être <strong>E/W</strong> PUIS <strong>N/S</strong></p>
+<h2 id="calcul-de-navigation">Calcul de navigation</h2>
+<p>La fonction <strong>ST_AZIMUTH</strong> permet de calculer des caps en dégrés.</p>
+<p>La fonction <strong>ST_DISTANCE</strong> permet de calculer des distances en <strong>mètres</strong>.</p>
+<p>Dans tous les cas il faut <strong>faire attention aux modèles utilisés !</strong>. Par exemple, pour de la navigation aérienne il est nécessaire d’être en WGS84 (modèle du GPS).</p>
+<div class="sourceCode" include="./fichiers/SQL/hdg_distance_spatial_db.sql"><pre class="sourceCode sql"><code class="sourceCode sql"><span class="kw">SELECT</span> ST_DISTANCE(c1.coordo, c2.coordo) / <span class="dv">1000</span> <span class="kw">as</span> <span class="ot">&quot;Distance (km)&quot;</span>,
+    <span class="kw">CASE</span> <span class="kw">WHEN</span> degrees(ST_AZIMUTH(c1.coordo, c2.coordo)) &lt; <span class="dv">0</span> <span class="kw">THEN</span> degrees(ST_AZIMUTH(c1.coordo, c2.coordo)) + <span class="dv">360</span>
+    ELSE
+    degrees(ST_AZIMUTH(c1.coordo, c2.coordo))
+    <span class="kw">END</span> <span class="kw">AS</span> <span class="ot">&quot;Cap&quot;</span>
+<span class="kw">FROM</span> demoPoint c1, demoPoint c2
+<span class="kw">WHERE</span> c1.nom = <span class="st">&#39;LFML&#39;</span> <span class="kw">AND</span> c2.nom = <span class="st">&#39;LFPO&#39;</span>;</code></pre></div>
+<p>Ci-dessous le résultat de la requête précédente :</p>
+<pre class="shell"><code>  Distance (km)  |       Cap        
+-----------------+------------------
+ 627.09856039227 | 340.544493840961
+(1 row)</code></pre>
+<p>Dans l’autre sens Paris Orly (LFPO) vers Marseille Provence (LFML) on obtient bien le réciproque :</p>
+<pre class="shell"><code>  Distance (km)  |       Cap       
+-----------------+-----------------
+ 627.09856039227 | 158.49973504052
+(1 row)</code></pre>
+<h2 id="requête-spatiales">Requête spatiales</h2>
+<h3 id="affichage-des-coordonnées-sous-forme-de-texte">Affichage des coordonnées sous forme de texte</h3>
+<div class="sourceCode" include="./fichiers/SQL/show_coordo_text.sql"><pre class="sourceCode sql"><code class="sourceCode sql"><span class="kw">SELECT</span> ST_AsText(coordo) <span class="kw">from</span> demoPoint <span class="kw">where</span> nom=<span class="st">&#39;LFOR&#39;</span>;</code></pre></div>
+<p>Le résultat de la requête est :</p>
+<pre class="shell"><code>        st_astext        
+-------------------------
+ POINT(1.52389 48.45889)
+(1 row)</code></pre>
+<h3 id="trouver-les-points-les-plus-proches-dun-point-dintérêt">Trouver les points les plus proches d’un point d’intérêt</h3>
+<div class="sourceCode" include="./fichiers/SQL/nearest_point.sql"><pre class="sourceCode sql"><code class="sourceCode sql"><span class="kw">SELECT</span> nom, ST_AsText(coordo) <span class="kw">as</span> coordonnees, 
+	ST_DISTANCE(coordo,poi)/<span class="dv">1000</span> <span class="kw">as</span> Distance_KM 
+<span class="kw">FROM</span> demoPoint,
+	(<span class="kw">select</span> ST_MakePoint(<span class="dv">2</span>,<span class="dv">45</span>):<span class="ch">:geography</span> <span class="kw">as</span> poi) <span class="kw">as</span> poi 
+<span class="kw">WHERE</span> ST_DWithin(coordo, poi, <span class="dv">400</span> * <span class="dv">1000</span>) 
+<span class="kw">ORDER</span> <span class="kw">BY</span> ST_Distance(coordo, poi)
+<span class="kw">LIMIT</span> <span class="dv">10</span>;</code></pre></div>
+<p>Le résultat de la requête est :</p>
+<pre class="shell"><code> nom  |       coordonnees       |   distance_km   
+------+-------------------------+-----------------
+ LFML | POINT(5.215 43.43667)   | 310.09213298947
+ LFOR | POINT(1.52389 48.45889) | 386.22555702069
+(2 rows)</code></pre>
+<div id="refs" class="references">
+
+</div>
+<section class="footnotes">
+<hr />
+<ol>
+<li id="fn1"><p>La démarche peut être légèrement différente en fonction des <em>OS</em> utilisés. Sous Windows, je pense qu’il suffit de taper directement <em>psql</em><a href="#fnref1">↩</a></p></li>
+</ol>
+</section>
+</body>
+</html>
