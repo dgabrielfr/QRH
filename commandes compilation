@@ -1,0 +1,7 @@
+# Pour convertir en HTML5
+
+pandoc -F pandoc-crossref -F pandoc-citeproc -F ./includes -f markdown -t html5 -c fichiers/css/github-pandoc.css -V lang=fr -S -s QRH_BD.md -o QRH_BD.html
+
+# Pour convertir en epub3 (mais au niveau du CSS ça ne marche pas bien !)
+
+pandoc -F pandoc-crossref -F pandoc-citeproc -F ./includes -f markdown -t epub3 -c fichiers/css/github-pandoc.css -V lang=fr -S -s QRH_BD.md -o QRH_BD.epub
