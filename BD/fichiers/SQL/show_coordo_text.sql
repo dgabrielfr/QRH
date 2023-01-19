@@ -1,0 +1,1 @@
+SELECT ST_AsText(coordo) from demoPoint where nom='LFOR';

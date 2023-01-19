@@ -1,0 +1,9 @@
+pgadmin3
+umbrello
+libpqxx
+psqlodbc
+python-psycopg2
+lua-sql-posqtgres
+php-pgsql
+haskell-postgresql-libpq
+haskell-postgresql-binary

@@ -1,0 +1,200 @@
+= QRH : Base de données / Base de données spatiales
+Damien GABRIEL <damien.gabriel.fr@gmail.com>
+v1.1, 2023-01-15
+
+:toc: auto
+:source-highlighter: rouge
+
+== Installation de PostgreSQL / PostGIS
+
+Remarque préliminaire : pour le partage de dossier entre Windows et une VM, se référer à https://dev.to/rahedmir/virtualbox-cannot-access-shared-folder-items-permission-denied-fixed-59mi[Résoudre les problèmes d'accès au dossier partagé]
+
+=== Linux (Manjaro)
+
+Pour installer PostreSQL et PostGIS sur Manjaro, il est nécessaire d'installer les paquets suivants :
+
+[source, bash]
+----
+include::./fichiers/bash/postgresql_install.txt[]
+----
+Fichiers d'installation pour PostgreSQL / PostGIS sur Manjaro.footnote:[Pour installer les paquets depuis un fichier utiliser la commande : pacman -S $(cat yourfilename | cut -d' ' -f1), cf https://unix.stackexchange.com/questions/587630/how-to-install-packages-with-pacman-from-a-list-contained-in-a-text-file[lien vers la response sur Unix StackExchange]]
+
+Il peut être utile d'installer DBeaver ou pgAdmin pour faciliter la gestion des bases (*TODO : tuto d'installation de DBeaver vis Snap sous Manjaro*)
+
+==== Initialisation du Cluster et ajout d'utilisateurs
+
+Par défaut, sous Manjaro, le Cluster de base de données n'est pas initialisé. De même seul l'utilisateur *postgres* est créé. Il est donc nécessaire d'initialiser le Cluster et de créer de nouveaux utilisateurs
+
+[source, bash]
+----
+sudo -i -u postgres
+initdb --local $LANG -E UTF8 -D '/var/lib/postgres/data'
+----
+
+Pour démarrer ou arreter le serveur, on utilise les commandes :
+
+[source, bash]
+----
+systemctl start postgresql
+systemctl stop postgresql
+----
+
+Il est bien sûr possible de démarrer le serveur automatiquement au démararrage de la session :
+
+[source, bash]
+----
+systemctl enable postgresql
+----
+
+Pour ajouter des utilisateurs, on utilise la commande suivante, qui créer un utilisateur nommé *lambda* ayant les droits de créer des bases de données :
+
+Tout d'abord, on se connecte avec l'utilisateur *postgres* qui est le seul utilisateur ayant les droits pour se connecter à PostgreSQL, par défaut :
+
+[source, bash]
+----
+su - postgres
+psql
+----
+
+Si la commande est executée correctement, l'utilisateur est maintenant connecté en tant qu'utilisateur *postgres* sur le shell de PostgreSQL (psql).
+
+On peut alors utiliser les commandes suivantes pour créer un utilisateur nommé *lambda* ayant pour mot de passe *omega* :
+
+[source, shell]
+----
+CREATE USER lambda;
+ALTER ROLE lambda WITH CREATEDB;
+ALTER ROLE lambda WITH ENCRYPTED PASSWORD 'omega';
+----
+
+==== Création d'une base de données
+
+Pour créer une base de données, on utilise :
+
+[source, bash]
+----
+created *nom_de_la_base*
+----
+
+On peut alors se connecter avec l'utilisateur *lambda* à la base *db* en utilisant :
+
+[source, bash]
+----
+psql -U lambda -d bd
+----
+
+Le shell de PostgreSQL doit afficher sur la première ligne le nom de la base, donc ici *db*.
+
+== Utilisation de PostgreSQL et PostGIS
+
+=== Création d'une base de données spatiale
+
+Pour créer une base de données spatiale avec PostGIS il faut utiliser les types *geography* si on veut faire des calculs précis (ie sur le geoïde en WGS84).
+
+Pour utiliser des données spatiales avec PostgreSQL, il faut activer l'extension PostGIS dans la base de données utilisée.
+
+[source, SQL]
+----
+include::./fichiers/SQL/create_spatial_db.sql[]
+----
+
+=== Insertion de données spatiale
+
+On peut ensuite insérer des données spatiale de la façon suivante :
+
+[source, SQL]
+----
+include::./fichiers/SQL/insert_spatial_db.sql[]
+----
+
+*ATTENTION* Comme le montre les commandes au-dessus, l'ordre des coordonnées doit d'abord être **E/W** PUIS **N/S** 
+
+=== Exemple d'utilisation : calcul de cap et distance entre deux aéroports
+
+La fonction *ST_AZIMUTH* permet de calculer des caps en dégrés.
+
+La fonction *ST_DISTANCE* permet de calculer des distances en *mètres*
+
+Dans tous les cas il faut *faire attention aux modèles utilisés !* Par exemple, pour de la navigation aérienne il est nécessaire d'être en WGS84 (modèle du GPS).
+
+[source, SQL]
+----
+include::./fichiers/SQL/hdg_distance_spatial_db.sql[]
+----
+
+Ci-dessous le résultat de la requête précédente :
+
+[source, shell]
+----
+  Distance (km)  |       Cap        
+-----------------+------------------
+ 627.09856039227 | 340.544493840961
+(1 row)
+----
+
+Dans l'autre sens, de Paris Orly (LFPO, ORY) vers Marseille Provence (LFML, MRS), on obtient bien le cap réciproque et la même distance :
+
+[source, shell]
+----
+  Distance (km)  |       Cap       
+-----------------+-----------------
+ 627.09856039227 | 158.49973504052
+(1 row)
+----
+
+=== Exemple d'utilisation : Trouver les points les plus proches d'un point d'intérêt
+
+On peut déterminer les points les plus proches d'un autre point, de la façon suivante :
+
+[source, SQL]
+----
+include::./fichiers/SQL/nearest_point.sql[]
+----
+
+Le résultat de la requête est :
+
+[source, shell]
+----
+ nom  |       coordonnees       |   distance_km   
+------+-------------------------+-----------------
+ LFML | POINT(5.215 43.43667)   | 310.09213298947
+ LFOR | POINT(1.52389 48.45889) | 386.22555702069
+(2 rows)
+----
+
+== Utilisation de GeoAlchemy 2
+
+*Note* : La syntaxe risque de changer avec le passage de SQLAlchemy en v2 (à suivre de près donc)
+
+https://geoalchemy-2.readthedocs.io/en/latest/[GeoAlchemy] est une extension de SQLAlchemy permettant l'utilisation de données spatiales
+
+=== Exemple d'utilisation : Distance et cap entre deux aéroports
+
+Voir la machine virtuelle Manjaro pour l'ensemble du code.
+
+Fichier *main.py*
+[source, python]
+----
+include::./fichiers/Python/main.py[]
+----
+
+Fichier *Airport.py*
+[source, python]
+----
+include::./fichiers/Python/Airport.py[]
+----
+
+Les dépendances du projets sont :
+
+Fichier *requirements.txt*
+[source, text]
+----
+include::./fichiers/Python/requirements.txt[]
+----
+
+Le résultat de la requête est :
+
+[source, shell]
+----
+[{'Distance (km)': 627.09856039227, 'Cap': 340.54449384096057}]
+----

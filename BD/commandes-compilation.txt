@@ -1,0 +1,8 @@
+# Génération d'un fichier HTML5 depuis le fichier .adoc
+asciidoctor QRH_BD.adoc
+
+# Génération d'un fichier epub depuis le HTML5
+pandoc --from='html' --to='epub3' QRH_BD.html -o QRH_BD.epub
+
+# Génération d'un fichier PDF depuis le HTML5
+pandoc --from='html' --to='pdf' QRH_BD.html -o QRH_BD.pdf
