@@ -1,8 +1,0 @@
-INSERT INTO demoPoint(nom, coordo)
-VALUES ('LFPO', ST_MAKEPOINT(2.37958, 48.72328));
-
-INSERT INTO demoPoint(nom, coordo)
-VALUES ('LFML', ST_MAKEPOINT(5.21500, 43.43667));
-
-INSERT INTO demoPoint(nom, coordo)
-VALUES ('LFOR', ST_MAKEPOINT(1.52389, 48.45889)); 
