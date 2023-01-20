@@ -1,0 +1,8 @@
+* Génération d'un fichier HTML5 depuis le fichier .adoc
+asciidoctor QRH_BD.adoc
+
+* Génération d'un fichier PDF avec asciidoctor-pdf (permet d'avoir la coloration syntaxique)
+asciidoctor-pdf QRH_BD.adoc footnote:[installer la *gem* correspondante comme indiqué sur le site https://nextgentips.com/2022/11/17/how-to-install-rails-7-on-manjaro-linux/[suivant]]
+
+* Génération d'un fichier EPUB3 avec asciidoctor-epub3
+asciidoctor-epub3 QRH_BD.adoc footnote:[installer la *gem* correspondante comme indiqué sur le site https://nextgentips.com/2022/11/17/how-to-install-rails-7-on-manjaro-linux/[suivant]]
