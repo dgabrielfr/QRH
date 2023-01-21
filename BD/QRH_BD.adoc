@@ -7,7 +7,10 @@ v1.1, 2023-01-15
 
 == Installation de PostgreSQL / PostGIS
 
+////
+La remarque plus d'actualité à partir du moment ou on passe par un repo git
 Remarque préliminaire : pour le partage de dossier entre Windows et une VM, se référer à https://dev.to/rahedmir/virtualbox-cannot-access-shared-folder-items-permission-denied-fixed-59mi[Résoudre les problèmes d'accès au dossier partagé]
+////
 
 === Linux (Manjaro)
 
