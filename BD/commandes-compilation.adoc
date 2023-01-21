@@ -1,4 +1,4 @@
-= Liste de commande de compilation pour la génération de fichier HTML5 / PDF et EPUB3
+= Liste de commande de compilation pour la génération de fichier HTML5 / PDF et EPUB3 avec coloration syntaxique
 
 * Génération d'un fichier HTML5 depuis le fichier .adoc :
 [source, shell]
@@ -7,13 +7,13 @@ asciidoctor QRH_BD.adoc
 ----
     
 
-* Génération d'un fichier PDF avec asciidoctor-pdf (permet d'avoir la coloration syntaxique) :
+* Génération d'un fichier PDF avec asciidoctor-pdf :
 [source, shell]
 ----
 asciidoctor-pdf QRH_BD.adoc
 ----
 
-* Génération d'un fichier EPUB3 avec asciidoctor-epub3 (permet d'avoir la coloration syntaxique) :
+* Génération d'un fichier EPUB3 avec asciidoctor-epub3 :
 [source, shell]
 ----
 asciidoctor-epub3 QRH_BD.adoc
