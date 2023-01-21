@@ -4,6 +4,7 @@ v1.1, 2023-01-15
 
 :toc: auto
 :source-highlighter: rouge
+:rouge-style: github
 
 == Installation de PostgreSQL / PostGIS
 
