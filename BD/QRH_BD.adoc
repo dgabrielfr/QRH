@@ -23,7 +23,7 @@ include::./fichiers/bash/postgresql_install.txt[]
 ----
 Fichiers d'installation pour PostgreSQL / PostGIS sur Manjaro.footnote:[Pour installer les paquets depuis un fichier utiliser la commande : pacman -S $(cat yourfilename | cut -d' ' -f1), cf https://unix.stackexchange.com/questions/587630/how-to-install-packages-with-pacman-from-a-list-contained-in-a-text-file[lien vers la response sur Unix StackExchange]]
 
-Il peut être utile d'installer DBeaver ou pgAdmin pour faciliter la gestion des bases footnote:[Installation de DBeaver via Snap sous Manjaro : [https://snapcraft.io/docs/installing-snap-on-manjaro-linux]. Une fois Snap installé et configuré, on peut executer la commande 
+Il peut être utile d'installer DBeaver ou pgAdmin pour faciliter la gestion des bases footnote:[Installation de DBeaver via Snap sous Manjaro : https://snapcraft.io/docs/installing-snap-on-manjaro-linux[Lien site snapcraft.io]]. Une fois Snap installé et configuré, on peut executer la commande 
 [source, bash]
 ----
 sudo snap install dbeaver-ce
