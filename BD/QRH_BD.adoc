@@ -37,7 +37,7 @@ Par défaut, sous Manjaro, le Cluster de base de données n'est pas initialisé.
 [source, bash]
 ----
 sudo -i -u postgres
-initdb --local $LANG -E UTF8 -D '/var/lib/postgres/data'
+initdb --locale $LANG -E UTF8 -D '/var/lib/postgres/data'
 ----
 
 Pour démarrer ou arreter le serveur, on utilise les commandes :
@@ -78,11 +78,11 @@ ALTER ROLE lambda WITH ENCRYPTED PASSWORD 'omega';
 
 ==== Création d'une base de données
 
-Pour créer une base de données, on utilise :
+Pour créer une base de données, on utilise (en dehors du shell de PostgreSQL) :
 
 [source, bash]
 ----
-created *nom_de_la_base*
+createdb *nom_de_la_base*
 ----
 
 On peut alors se connecter avec l'utilisateur *lambda* à la base *db* en utilisant :
@@ -207,3 +207,14 @@ Le résultat de la requête est :
 ----
 [{'Distance (km)': 627.09856039227, 'Cap': 340.54449384096057}]
 ----
+
+== Mise à jour de PostgreSQL
+
+Lors de mise à jour (particulièrement de de Linux), il peut être nécessaire de mettre à jour PostgreSQL.
+Dans mon cas, il s'agit de passer PostgreSQL de la version 14 à 15 sous Manjaro.
+
+Les liens de référence sont suivant:
+
+* https://wiki.archlinux.org/title/PostgreSQL#Upgrading_PostgreSQL[Lien vers le Wiki d'Arch Linux sur le sujet]
+* https://www.postgresql.org/docs/current/upgrading.html[Lien vers la documentation officielle de PostgreSQL]
+
