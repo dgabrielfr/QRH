@@ -1,0 +1,78 @@
+= Liste de commande de compilation pour la génération de fichier HTML5 / PDF et EPUB3 avec coloration syntaxique
+
+* Génération d'un fichier HTML5 depuis le fichier .adoc :
+[source, shell]
+----
+asciidoctor-epub3 -a source-highlighter=rouge -a rouge-style=thankful_eyes QRH_SSH_git.adoc
+----
+    
+
+* Génération d'un fichier PDF avec asciidoctor-pdf :
+[source, shell]
+----
+asciidoctor-pdf -a source-highlighter=rouge -a rouge-style=thankful_eyes QRH_SSH_git.adoc
+----
+
+* Génération d'un fichier EPUB3 avec asciidoctor-epub3 :
+[source, shell]
+----
+asciidoctor-epub3 -a source-highlighter=rouge -a rouge-style=thankful_eyes QRH_SSH_git.adoc
+----
+
+
+Pour avoir de la coloration syntaxique des fragments de code et fichier inclus, il est préférable d'installer les *gems* ruby suivantes :
+
+* asciidoctor-pdf : pour la génération de fichier PDF depuis le document asciidoctor
+
+* asciidoctor-epub3 : pour la génération de fichier EPUB3 depuis le document asciidoctor
+
+== Installation des *gems* sous Manjaro
+
+=== Installation des gems ruby nécessaires via Quary -> manque asciidoctor-epub3
+
+* Modifier le fichier */etc/pacman.conf* pour ajouter le repository *quary* :
+
+[source, shell]
+----
+[quarry]
+Server = https://pkgbuild.com/~anatolik/quarry/x86_64/
+----
+
+* Installer *ruby-asciidoctor-pdf*:
+[source, bash]
+----
+sudo pacman -S quarry/ruby-asciidoctor-pdf
+----
+
+=== Installation via gem install
+
+* Installer asciidoctor-pdf :
+[source, bash]
+----
+gem install asciidoctor-pdf
+----
+
+* Installer asciidoctor-epub3 :
+[source, bash]
+----
+gem install asciidoctor-epub3
+----
+
+=== Ajout au PATH
+
+Voir le lien suivant sur https://stackoverflow.com/questions/53979362/you-dont-have-path-in-your-path-gem-executables-will-not-run-while-using[StackOverflow]
+
+Par défaut Manjaro Gnome utilise *zsh*, il faut donc utiliser nano/vim pour editer *~/.zshrc* :
+
+[source, bash]
+----
+nano ~/.zshrc
+----
+
+Et rajouter à la fin du fichier :
+
+[source, shell]
+----
+export GEM_HOME="$(ruby -e 'puts Gem.user_dir')"
+export PATH="$PATH:$GEM_HOME/bin"
+----
