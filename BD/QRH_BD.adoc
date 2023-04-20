@@ -37,7 +37,7 @@ Par défaut, sous Manjaro, le Cluster de base de données n'est pas initialisé.
 [source, bash]
 ----
 sudo -i -u postgres
-initdb --local $LANG -E UTF8 -D '/var/lib/postgres/data'
+initdb --locale $LANG -E UTF8 -D '/var/lib/postgres/data'
 ----
 
 Pour démarrer ou arreter le serveur, on utilise les commandes :
@@ -82,7 +82,7 @@ Pour créer une base de données, on utilise :
 
 [source, bash]
 ----
-created *nom_de_la_base*
+createdb *nom_de_la_base*
 ----
 
 On peut alors se connecter avec l'utilisateur *lambda* à la base *db* en utilisant :
