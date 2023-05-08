@@ -171,7 +171,7 @@ Le résultat de la requête est :
 (2 rows)
 ----
 
-== Utilisation de GeoAlchemy 2
+== Utilisation de GeoAlchemy 2 avec SQLAlchemy v1
 
 *Note* : La syntaxe risque de changer avec le passage de SQLAlchemy en v2 (à suivre de près donc)
 
@@ -184,13 +184,13 @@ Voir la machine virtuelle Manjaro pour l'ensemble du code.
 Fichier *main.py*
 [source, python]
 ----
-include::./fichiers/Python/main.py[]
+include::./fichiers/Python/SQLAlchemy v1/main.py[]
 ----
 
 Fichier *Airport.py*
 [source, python]
 ----
-include::./fichiers/Python/Airport.py[]
+include::./fichiers/Python/SQLAlchemy v1/Airport.py[]
 ----
 
 Les dépendances du projets sont :
@@ -198,7 +198,7 @@ Les dépendances du projets sont :
 Fichier *requirements.txt*
 [source, text]
 ----
-include::./fichiers/Python/requirements.txt[]
+include::./fichiers/Python/SQLAlchemy v1/requirements.txt[]
 ----
 
 Le résultat de la requête est :
@@ -207,6 +207,29 @@ Le résultat de la requête est :
 ----
 [{'Distance (km)': 627.09856039227, 'Cap': 340.54449384096057}]
 ----
+
+== Utilisation de GeoAlchemy 2 avec SQLAlchemy v2
+
+Pour le moment, je n'ai vu qu'un seul changement à faire pour que le programme soit compatible avec SQLAlchemy v2.
+
+Il faut déclarer la requete textuelle explicitement comme étant du texte.
+
+Voir le fichier main modifié :
+
+Fichier *main.py*
+[source, python]
+----
+include::./fichiers/Python/SQLAlchemy v2/main.py[]
+----
+
+Les dépendances, mise à jour, du projets sont :
+
+Fichier *requirements.txt*
+[source, text]
+----
+include::./fichiers/Python/SQLAlchemy v2/requirements.txt[]
+----
+
 
 == Mise à jour de PostgreSQL
 

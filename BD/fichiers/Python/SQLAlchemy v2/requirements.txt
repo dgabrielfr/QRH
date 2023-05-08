@@ -1,0 +1,4 @@
+psycopg2~=2.9.5
+SQLAlchemy~=2.0.12
+setuptools~=65.5.1
+GeoAlchemy2~=0.12.5

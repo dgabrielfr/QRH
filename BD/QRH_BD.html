@@ -853,7 +853,7 @@ LIMIT 10;</code></pre>
 </div>
 </div>
 <div class="sect1">
-<h2 id="_utilisation_de_geoalchemy_2">Utilisation de GeoAlchemy 2</h2>
+<h2 id="_utilisation_de_geoalchemy_2_avec_sqlalchemy_v1">Utilisation de GeoAlchemy 2 avec SQLAlchemy v1</h2>
 <div class="sectionbody">
 <div class="paragraph">
 <p><strong>Note</strong> : La syntaxe risque de changer avec le passage de SQLAlchemy en v2 (à suivre de près donc)</p>
@@ -876,42 +876,44 @@ Demonstration de GeoAlchemy 2
 """</span>
 <span class="n">__author__</span> <span class="o">=</span> <span class="s">'Damien GABRIEL'</span>
 
-<span class="kn">import</span> <span class="nn">psycopg2</span>
-<span class="kn">import</span> <span class="nn">sqlalchemy</span> <span class="k">as</span> <span class="n">sa</span>
-<span class="kn">from</span> <span class="nn">sqlalchemy</span> <span class="kn">import</span> <span class="n">create_engine</span>
-<span class="kn">from</span> <span class="nn">sqlalchemy.orm</span> <span class="kn">import</span> <span class="n">sessionmaker</span>
-<span class="kn">from</span> <span class="nn">Airport</span> <span class="kn">import</span> <span class="n">Airport</span>
+<span class="kn">import</span> <span class="n">psycopg2</span>
+<span class="kn">import</span> <span class="n">sqlalchemy</span> <span class="k">as</span> <span class="n">sa</span>
+<span class="kn">from</span> <span class="n">sqlalchemy</span> <span class="kn">import</span> <span class="n">create_engine</span><span class="p">,</span> <span class="n">text</span>
+<span class="kn">from</span> <span class="n">sqlalchemy.orm</span> <span class="kn">import</span> <span class="n">sessionmaker</span>
+<span class="kn">from</span> <span class="n">Airport</span> <span class="kn">import</span> <span class="n">Airport</span>
 
 <span class="k">if</span> <span class="n">__name__</span> <span class="o">==</span> <span class="s">'__main__'</span><span class="p">:</span>
-    <span class="n">engine</span> <span class="o">=</span> <span class="n">create_engine</span><span class="p">(</span><span class="s">'postgresql://pgm:pgm@localhost/demo_geography'</span><span class="p">,</span> <span class="n">echo</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span>
-    <span class="n">insp</span> <span class="o">=</span> <span class="n">sa</span><span class="p">.</span><span class="n">inspect</span><span class="p">(</span><span class="n">engine</span><span class="p">)</span>
-    <span class="k">if</span> <span class="n">insp</span><span class="p">.</span><span class="n">has_table</span><span class="p">(</span><span class="s">"airport"</span><span class="p">):</span>
-        <span class="k">print</span><span class="p">(</span><span class="s">"Airport table exists"</span><span class="p">)</span>
-        <span class="n">Airport</span><span class="p">.</span><span class="n">__table__</span><span class="p">.</span><span class="n">drop</span><span class="p">(</span><span class="n">engine</span><span class="p">)</span>
-    <span class="n">Airport</span><span class="p">.</span><span class="n">__table__</span><span class="p">.</span><span class="n">create</span><span class="p">(</span><span class="n">engine</span><span class="p">)</span>
-    <span class="n">Session</span> <span class="o">=</span> <span class="n">sessionmaker</span><span class="p">(</span><span class="n">bind</span><span class="o">=</span><span class="n">engine</span><span class="p">)</span>
-    <span class="n">session</span> <span class="o">=</span> <span class="n">Session</span><span class="p">()</span>
-    <span class="n">Marseille_Provence</span> <span class="o">=</span> <span class="n">Airport</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s">'Marseille Provence'</span><span class="p">,</span> <span class="n">icao</span><span class="o">=</span><span class="s">'LFML'</span><span class="p">,</span> <span class="n">iata</span><span class="o">=</span><span class="s">'MRS'</span><span class="p">,</span>
+    <span class="n">engine</span> <span class="o">=</span> <span class="nf">create_engine</span><span class="p">(</span><span class="s">'postgresql://pgm:pgm@localhost/postgis'</span><span class="p">,</span> <span class="n">echo</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span>
+    <span class="n">insp</span> <span class="o">=</span> <span class="n">sa</span><span class="p">.</span><span class="nf">inspect</span><span class="p">(</span><span class="n">engine</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">insp</span><span class="p">.</span><span class="nf">has_table</span><span class="p">(</span><span class="s">"airport"</span><span class="p">):</span>
+        <span class="nf">print</span><span class="p">(</span><span class="s">"Airport table exists"</span><span class="p">)</span>
+        <span class="n">Airport</span><span class="p">.</span><span class="n">__table__</span><span class="p">.</span><span class="nf">drop</span><span class="p">(</span><span class="n">engine</span><span class="p">)</span>
+    <span class="n">Airport</span><span class="p">.</span><span class="n">__table__</span><span class="p">.</span><span class="nf">create</span><span class="p">(</span><span class="n">engine</span><span class="p">)</span>
+    <span class="n">Session</span> <span class="o">=</span> <span class="nf">sessionmaker</span><span class="p">(</span><span class="n">bind</span><span class="o">=</span><span class="n">engine</span><span class="p">)</span>
+    <span class="n">session</span> <span class="o">=</span> <span class="nc">Session</span><span class="p">()</span>
+    <span class="n">Marseille_Provence</span> <span class="o">=</span> <span class="nc">Airport</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s">'Marseille Provence'</span><span class="p">,</span> <span class="n">icao</span><span class="o">=</span><span class="s">'LFML'</span><span class="p">,</span> <span class="n">iata</span><span class="o">=</span><span class="s">'MRS'</span><span class="p">,</span>
                                  <span class="n">coordinates</span><span class="o">=</span><span class="s">'POINT(5.21500 43.43667)'</span><span class="p">)</span>
-    <span class="n">Paris_Orly</span> <span class="o">=</span> <span class="n">Airport</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s">'Paris Orly'</span><span class="p">,</span> <span class="n">icao</span><span class="o">=</span><span class="s">'LFPO'</span><span class="p">,</span> <span class="n">iata</span><span class="o">=</span><span class="s">'ORY'</span><span class="p">,</span>
+    <span class="n">Paris_Orly</span> <span class="o">=</span> <span class="nc">Airport</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s">'Paris Orly'</span><span class="p">,</span> <span class="n">icao</span><span class="o">=</span><span class="s">'LFPO'</span><span class="p">,</span> <span class="n">iata</span><span class="o">=</span><span class="s">'ORY'</span><span class="p">,</span>
                          <span class="n">coordinates</span><span class="o">=</span><span class="s">'POINT(2.37958 48.72328)'</span><span class="p">)</span>
-    <span class="n">session</span><span class="p">.</span><span class="n">add</span><span class="p">(</span><span class="n">Marseille_Provence</span><span class="p">)</span>
-    <span class="n">session</span><span class="p">.</span><span class="n">add</span><span class="p">(</span><span class="n">Paris_Orly</span><span class="p">)</span>
-    <span class="n">session</span><span class="p">.</span><span class="n">commit</span><span class="p">()</span>
-    <span class="n">distance_cap</span> <span class="o">=</span> <span class="n">session</span><span class="p">.</span><span class="n">execute</span><span class="p">(</span><span class="s">"""
-    SELECT ST_DISTANCE(c1.coordinates,
+    <span class="n">session</span><span class="p">.</span><span class="nf">add</span><span class="p">(</span><span class="n">Marseille_Provence</span><span class="p">)</span>
+    <span class="n">session</span><span class="p">.</span><span class="nf">add</span><span class="p">(</span><span class="n">Paris_Orly</span><span class="p">)</span>
+    <span class="n">session</span><span class="p">.</span><span class="nf">commit</span><span class="p">()</span>
+    <span class="c1"># textual query should now be explicit text!
+</span>    <span class="n">text_query</span> <span class="o">=</span> <span class="nf">text</span><span class="p">(</span><span class="s">"""
+        SELECT ST_DISTANCE(c1.coordinates,
         c2.coordinates) / 1000 as "Distance (km)",
         CASE WHEN degrees(ST_AZIMUTH(c1.coordinates, c2.coordinates)) &lt; 0
         THEN degrees(ST_AZIMUTH(c1.coordinates, c2.coordinates)) + 360
         ELSE
         degrees(ST_AZIMUTH(c1.coordinates, c2.coordinates))
         END AS "Cap"
-    FROM Airport c1, Airport c2
-    WHERE c1.name = 'Marseille Provence' AND c2.name = 'Paris Orly';
-    -- WHERE c1.icao = 'LFML' AND c2.icao = 'LFPO';
+        FROM Airport c1, Airport c2
+        WHERE c1.name = 'Marseille Provence' AND c2.name = 'Paris Orly';
+        -- WHERE c1.icao = 'LFML' AND c2.icao = 'LFPO';
         """</span><span class="p">)</span>
-    <span class="n">results_as_dict</span> <span class="o">=</span> <span class="n">distance_cap</span><span class="p">.</span><span class="n">mappings</span><span class="p">().</span><span class="nb">all</span><span class="p">()</span>
-    <span class="k">print</span><span class="p">(</span><span class="n">results_as_dict</span><span class="p">)</span></code></pre>
+    <span class="n">distance_cap</span> <span class="o">=</span> <span class="n">session</span><span class="p">.</span><span class="nf">execute</span><span class="p">(</span><span class="n">text_query</span><span class="p">)</span>
+    <span class="n">results_as_dict</span> <span class="o">=</span> <span class="n">distance_cap</span><span class="p">.</span><span class="nf">mappings</span><span class="p">().</span><span class="nf">all</span><span class="p">()</span>
+    <span class="nf">print</span><span class="p">(</span><span class="n">results_as_dict</span><span class="p">)</span></code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -925,20 +927,20 @@ Définition de la table Airport
 """</span>
 <span class="n">__author__</span> <span class="o">=</span> <span class="s">"Damien GABRIEL"</span>
 
-<span class="kn">from</span> <span class="nn">sqlalchemy.ext.declarative</span> <span class="kn">import</span> <span class="n">declarative_base</span>
-<span class="kn">from</span> <span class="nn">sqlalchemy</span> <span class="kn">import</span> <span class="n">Column</span><span class="p">,</span> <span class="n">Integer</span><span class="p">,</span> <span class="n">String</span>
-<span class="kn">from</span> <span class="nn">geoalchemy2</span> <span class="kn">import</span> <span class="n">Geography</span>
+<span class="kn">from</span> <span class="n">sqlalchemy.ext.declarative</span> <span class="kn">import</span> <span class="n">declarative_base</span>
+<span class="kn">from</span> <span class="n">sqlalchemy</span> <span class="kn">import</span> <span class="n">Column</span><span class="p">,</span> <span class="n">Integer</span><span class="p">,</span> <span class="n">String</span>
+<span class="kn">from</span> <span class="n">geoalchemy2</span> <span class="kn">import</span> <span class="n">Geography</span>
 
-<span class="n">Base</span> <span class="o">=</span> <span class="n">declarative_base</span><span class="p">()</span>
+<span class="n">Base</span> <span class="o">=</span> <span class="nf">declarative_base</span><span class="p">()</span>
 
 
 <span class="k">class</span> <span class="nc">Airport</span><span class="p">(</span><span class="n">Base</span><span class="p">):</span>
     <span class="n">__tablename__</span> <span class="o">=</span> <span class="s">'airport'</span>
-    <span class="nb">id</span> <span class="o">=</span> <span class="n">Column</span><span class="p">(</span><span class="n">Integer</span><span class="p">,</span> <span class="n">primary_key</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
-    <span class="n">name</span> <span class="o">=</span> <span class="n">Column</span><span class="p">(</span><span class="n">String</span><span class="p">)</span>
-    <span class="n">icao</span> <span class="o">=</span> <span class="n">Column</span><span class="p">(</span><span class="n">String</span><span class="p">)</span>
-    <span class="n">iata</span> <span class="o">=</span> <span class="n">Column</span><span class="p">(</span><span class="n">String</span><span class="p">)</span>
-    <span class="n">coordinates</span> <span class="o">=</span> <span class="n">Column</span><span class="p">(</span><span class="n">Geography</span><span class="p">(</span><span class="s">'POINT'</span><span class="p">,</span> <span class="n">srid</span><span class="o">=</span><span class="mi">4326</span><span class="p">))</span></code></pre>
+    <span class="nb">id</span> <span class="o">=</span> <span class="nc">Column</span><span class="p">(</span><span class="n">Integer</span><span class="p">,</span> <span class="n">primary_key</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+    <span class="n">name</span> <span class="o">=</span> <span class="nc">Column</span><span class="p">(</span><span class="n">String</span><span class="p">)</span>
+    <span class="n">icao</span> <span class="o">=</span> <span class="nc">Column</span><span class="p">(</span><span class="n">String</span><span class="p">)</span>
+    <span class="n">iata</span> <span class="o">=</span> <span class="nc">Column</span><span class="p">(</span><span class="n">String</span><span class="p">)</span>
+    <span class="n">coordinates</span> <span class="o">=</span> <span class="nc">Column</span><span class="p">(</span><span class="nc">Geography</span><span class="p">(</span><span class="s">'POINT'</span><span class="p">,</span> <span class="n">srid</span><span class="o">=</span><span class="mi">4326</span><span class="p">))</span></code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -962,6 +964,82 @@ GeoAlchemy2~=0.12.5</code></pre>
 <div class="content">
 <pre class="rouge highlight"><code data-lang="shell"><span class="o">[{</span><span class="s1">'Distance (km)'</span>: 627.09856039227, <span class="s1">'Cap'</span>: 340.54449384096057<span class="o">}]</span></code></pre>
 </div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_utilisation_de_geoalchemy_2_avec_sqlalchemy_v2">Utilisation de GeoAlchemy 2 avec SQLAlchemy v2</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Pour le moment, je n&#8217;ai vu qu&#8217;un seul changement à faire pour que le programme soit compatible avec SQLAlchemy v2.</p>
+</div>
+<div class="paragraph">
+<p>Il faut déclarer la requete textuelle explicitement comme étant du texte.</p>
+</div>
+<div class="paragraph">
+<p>Voir le fichier main modifié :</p>
+</div>
+<div class="paragraph">
+<p>Fichier <strong>main.py</strong></p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="rouge highlight"><code data-lang="python"><span class="s">"""
+Demonstration de GeoAlchemy 2
+"""</span>
+<span class="n">__author__</span> <span class="o">=</span> <span class="s">'Damien GABRIEL'</span>
+
+<span class="kn">import</span> <span class="n">psycopg2</span>
+<span class="kn">import</span> <span class="n">sqlalchemy</span> <span class="k">as</span> <span class="n">sa</span>
+<span class="kn">from</span> <span class="n">sqlalchemy</span> <span class="kn">import</span> <span class="n">create_engine</span>
+<span class="kn">from</span> <span class="n">sqlalchemy.orm</span> <span class="kn">import</span> <span class="n">sessionmaker</span>
+<span class="kn">from</span> <span class="n">Airport</span> <span class="kn">import</span> <span class="n">Airport</span>
+
+<span class="k">if</span> <span class="n">__name__</span> <span class="o">==</span> <span class="s">'__main__'</span><span class="p">:</span>
+    <span class="n">engine</span> <span class="o">=</span> <span class="nf">create_engine</span><span class="p">(</span><span class="s">'postgresql://pgm:pgm@localhost/demo_geography'</span><span class="p">,</span> <span class="n">echo</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span>
+    <span class="n">insp</span> <span class="o">=</span> <span class="n">sa</span><span class="p">.</span><span class="nf">inspect</span><span class="p">(</span><span class="n">engine</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">insp</span><span class="p">.</span><span class="nf">has_table</span><span class="p">(</span><span class="s">"airport"</span><span class="p">):</span>
+        <span class="nf">print</span><span class="p">(</span><span class="s">"Airport table exists"</span><span class="p">)</span>
+        <span class="n">Airport</span><span class="p">.</span><span class="n">__table__</span><span class="p">.</span><span class="nf">drop</span><span class="p">(</span><span class="n">engine</span><span class="p">)</span>
+    <span class="n">Airport</span><span class="p">.</span><span class="n">__table__</span><span class="p">.</span><span class="nf">create</span><span class="p">(</span><span class="n">engine</span><span class="p">)</span>
+    <span class="n">Session</span> <span class="o">=</span> <span class="nf">sessionmaker</span><span class="p">(</span><span class="n">bind</span><span class="o">=</span><span class="n">engine</span><span class="p">)</span>
+    <span class="n">session</span> <span class="o">=</span> <span class="nc">Session</span><span class="p">()</span>
+    <span class="n">Marseille_Provence</span> <span class="o">=</span> <span class="nc">Airport</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s">'Marseille Provence'</span><span class="p">,</span> <span class="n">icao</span><span class="o">=</span><span class="s">'LFML'</span><span class="p">,</span> <span class="n">iata</span><span class="o">=</span><span class="s">'MRS'</span><span class="p">,</span>
+                                 <span class="n">coordinates</span><span class="o">=</span><span class="s">'POINT(5.21500 43.43667)'</span><span class="p">)</span>
+    <span class="n">Paris_Orly</span> <span class="o">=</span> <span class="nc">Airport</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s">'Paris Orly'</span><span class="p">,</span> <span class="n">icao</span><span class="o">=</span><span class="s">'LFPO'</span><span class="p">,</span> <span class="n">iata</span><span class="o">=</span><span class="s">'ORY'</span><span class="p">,</span>
+                         <span class="n">coordinates</span><span class="o">=</span><span class="s">'POINT(2.37958 48.72328)'</span><span class="p">)</span>
+    <span class="n">session</span><span class="p">.</span><span class="nf">add</span><span class="p">(</span><span class="n">Marseille_Provence</span><span class="p">)</span>
+    <span class="n">session</span><span class="p">.</span><span class="nf">add</span><span class="p">(</span><span class="n">Paris_Orly</span><span class="p">)</span>
+    <span class="n">session</span><span class="p">.</span><span class="nf">commit</span><span class="p">()</span>
+    <span class="n">distance_cap</span> <span class="o">=</span> <span class="n">session</span><span class="p">.</span><span class="nf">execute</span><span class="p">(</span><span class="s">"""
+    SELECT ST_DISTANCE(c1.coordinates,
+        c2.coordinates) / 1000 as "Distance (km)",
+        CASE WHEN degrees(ST_AZIMUTH(c1.coordinates, c2.coordinates)) &lt; 0
+        THEN degrees(ST_AZIMUTH(c1.coordinates, c2.coordinates)) + 360
+        ELSE
+        degrees(ST_AZIMUTH(c1.coordinates, c2.coordinates))
+        END AS "Cap"
+    FROM Airport c1, Airport c2
+    WHERE c1.name = 'Marseille Provence' AND c2.name = 'Paris Orly';
+    -- WHERE c1.icao = 'LFML' AND c2.icao = 'LFPO';
+        """</span><span class="p">)</span>
+    <span class="n">results_as_dict</span> <span class="o">=</span> <span class="n">distance_cap</span><span class="p">.</span><span class="nf">mappings</span><span class="p">().</span><span class="nf">all</span><span class="p">()</span>
+    <span class="nf">print</span><span class="p">(</span><span class="n">results_as_dict</span><span class="p">)</span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Les dépendances, mise à jour, du projets sont :</p>
+</div>
+<div class="paragraph">
+<p>Fichier <strong>requirements.txt</strong></p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="rouge highlight"><code data-lang="text">psycopg2~=2.9.5
+SQLAlchemy~=2.0.12
+setuptools~=65.5.1
+GeoAlchemy2~=0.12.5</code></pre>
 </div>
 </div>
 </div>
@@ -1001,7 +1079,7 @@ Dans mon cas, il s&#8217;agit de passer PostgreSQL de la version 14 à 15 sous M
 <div id="footer">
 <div id="footer-text">
 Version 1.1<br>
-Last updated 2023-02-23 20:56:49 +0100
+Last updated 2023-05-08 21:11:33 +0200
 </div>
 </div>
 </body>
