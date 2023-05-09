@@ -1029,6 +1029,38 @@ Demonstration de GeoAlchemy 2
 </div>
 </div>
 <div class="paragraph">
+<p>Avec les nouvelles déclarations pour la définition des classes, le fichier Airport.py devient</p>
+</div>
+<div class="paragraph">
+<p>Fichier <strong>Airport.py</strong></p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="rouge highlight"><code data-lang="text">"""
+Demonstration de l'utilisation de GeoAlchemy 2
+Définition de la table Airport
+"""
+__author__ = "Damien GABRIEL"
+
+from sqlalchemy import Column, Integer, String
+from geoalchemy2 import Geography
+from sqlalchemy.orm import Mapped, DeclarativeBase, mapped_column
+
+
+class Base(DeclarativeBase):
+    pass
+
+
+class Airport(Base):
+    __tablename__ = 'airport'
+    id: Mapped[int] = mapped_column(primary_key=True)
+    name: Mapped[str] = mapped_column(String(40))
+    icao: Mapped[str] = mapped_column(String(4))
+    iata: Mapped[str] = mapped_column(String(3))
+    coordinates: Mapped[Geography] = mapped_column(Geography('POINT', srid=4326))</code></pre>
+</div>
+</div>
+<div class="paragraph">
 <p>Les dépendances, mise à jour, du projets sont :</p>
 </div>
 <div class="paragraph">
@@ -1079,7 +1111,7 @@ Dans mon cas, il s&#8217;agit de passer PostgreSQL de la version 14 à 15 sous M
 <div id="footer">
 <div id="footer-text">
 Version 1.1<br>
-Last updated 2023-05-08 21:11:33 +0200
+Last updated 2023-05-09 18:24:08 +0200
 </div>
 </div>
 </body>

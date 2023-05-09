@@ -222,6 +222,14 @@ Fichier *main.py*
 include::./fichiers/Python/SQLAlchemy v2/main.py[]
 ----
 
+Avec les nouvelles déclarations pour la définition des classes, le fichier Airport.py devient
+
+Fichier *Airport.py*
+[source, text]
+----
+include::./fichiers/Python/SQLAlchemy v2/Airport.py[]
+----
+
 Les dépendances, mise à jour, du projets sont :
 
 Fichier *requirements.txt*

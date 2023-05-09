@@ -4,17 +4,20 @@ Définition de la table Airport
 """
 __author__ = "Damien GABRIEL"
 
-from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy import Column, Integer, String
 from geoalchemy2 import Geography
+from sqlalchemy.orm import Mapped, DeclarativeBase, mapped_column
 
-Base = declarative_base()
+
+class Base(DeclarativeBase):
+    pass
 
 
 class Airport(Base):
     __tablename__ = 'airport'
-    id = Column(Integer, primary_key=True)
-    name = Column(String)
-    icao = Column(String)
-    iata = Column(String)
-    coordinates = Column(Geography('POINT', srid=4326))
+    id: Mapped[int] = mapped_column(primary_key=True)
+    name: Mapped[str] = mapped_column(String(40))
+    icao: Mapped[str] = mapped_column(String(4))
+    iata: Mapped[str] = mapped_column(String(3))
+    coordinates: Mapped[Geography] = mapped_column(Geography('POINT', srid=4326))
+
