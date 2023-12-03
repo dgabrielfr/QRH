@@ -76,6 +76,42 @@ ALTER ROLE lambda WITH CREATEDB;
 ALTER ROLE lambda WITH ENCRYPTED PASSWORD 'omega';
 ----
 
+==== Création d'un shéma et modification des droits de l'utilisateur
+
+Sur les versions récentes de PostgreSQL (à partir de la version 15 ?), il est nécessaire de créer des schémas pour des questions de droits d'accès.
+Un schéma peut regrouper plusieurs tables et permet de mieux organiser ces données.
+
+Pour créer un schéma, il faut utiliser la commande :
+
+[source, shell]
+----
+CREATE SCHEMA myschema;
+----
+
+Il faut ensuite donner les droits aux utilisateurs de ce schéma :
+
+* Il faut se connecter avec un super-utilsateur, ici *postgres* sur la base *eAIP_France* :
+
+[source, shell]
+----
+psql -U postgres -d eAIP_France
+----
+
+* Rendre l'utilisateur *omega*  propriétaire du schéma *schema_name* :
+
+[source, shell]
+----
+ALTER SCHEMA schema_name OWNER TO omega;
+----
+
+* Il peut être utile voir nécessaire de donner des droits à l'utilsateur *omega*. Il est par exemple possible de lui donner les droits de superutilisateur :
+
+[source, shell]
+----
+ALTER USER omega WITH SUPERUSER; 
+----
+
+
 ==== Création d'une base de données
 
 Pour créer une base de données, on utilise (en dehors du shell de PostgreSQL) :
@@ -249,3 +285,6 @@ Les liens de référence sont suivant:
 * https://wiki.archlinux.org/title/PostgreSQL#Upgrading_PostgreSQL[Lien vers le Wiki d'Arch Linux sur le sujet]
 * https://www.postgresql.org/docs/current/upgrading.html[Lien vers la documentation officielle de PostgreSQL]
 
+* https://postgresql-tutorial.com/postgresql-how-to-grant-superuser-privileges/
+* https://postgresql-tutorial.com/postgresql-how-to-change-the-owner-of-a-schema/
+* https://dba.stackexchange.com/questions/209179/how-to-assign-privileges-on-a-postgresql-schema-to-a-user
