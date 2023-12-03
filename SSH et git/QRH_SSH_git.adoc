@@ -1,7 +1,45 @@
 = QRH : SSH et git
 Damien GABRIEL <damien.gabriel.fr@gmail.com>
-v0.1, 2023-04-20
+v0.1, 2023-12-03
 
 :toc: auto
 :source-highlighter: rouge
 :rouge-style: github
+
+
+== Création d'une clé SSH
+
+Quand on programme, on est souvent amené à utiliser *git*.
+Afin de travailler plus efficacement, il est préférable de générer une clé SSH pour pouvoir s'authentifier plus rapidement
+(pas besoin de taper son mot de passe)
+
+La commande a utilisée pour créer une clé SSH est :
+
+[source, bash]
+----
+ssh-keygen -t ed25519 -C "your_email@example.com"
+----
+
+Deux remarques :
+
+* On utilise ici l'algorithme *ed25519* pour générer la clé. Si la version de Linux / Windows ne supporte pas cet algorithme, il faut utiliser l'agorithme *RSA* par exemple
+* Il convient de remplacer *your_email* par son adresse mail de contact
+
+== Ajout à ssh-agent
+Une fois la clé générée, il faut l'ajouter à ssh-agent (sous Linux):
+
+[source, bash]
+----
+eval "$(ssh-agent -s)"
+ssh-add ~/.ssh/id_ed25519
+----
+
+Le chemin *~/.ssh/id_ed25519* est à remplacer par le chemin utilisé lors de la création de la clé à la première étape
+
+== Ajout de la clé à github
+
+(insérer un screenshot)
+
+== Lien vers la documentation utilisée :
+
+* https://docs.github.com/en/authentication/connecting-to-github-with-ssh/generating-a-new-ssh-key-and-adding-it-to-the-ssh-agent?platform=linux
