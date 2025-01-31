@@ -36,6 +36,16 @@ ssh-add ~/.ssh/id_ed25519
 
 Le chemin *~/.ssh/id_ed25519* est à remplacer par le chemin utilisé lors de la création de la clé à la première étape
 
+Sous Windows 11, il faut utiliser les commandes suivantes (en lançant Powershell en tant qu'administrateur)
+
+[source, powershell]
+----
+Get-Service ssh-agent | Set-Service -StartupType Automatic
+Start-Service ssh-agent
+ssh-add "~/.ssh/id_ed25519"
+----
+
+
 == Ajout de la clé à github
 
 (insérer un screenshot)
@@ -43,3 +53,4 @@ Le chemin *~/.ssh/id_ed25519* est à remplacer par le chemin utilisé lors de la
 == Lien vers la documentation utilisée :
 
 * https://docs.github.com/en/authentication/connecting-to-github-with-ssh/generating-a-new-ssh-key-and-adding-it-to-the-ssh-agent?platform=linux
+* https://stackoverflow.com/questions/65741816/error-connecting-to-agent-no-such-file-or-directory-adding-key-to-ssh-agent
